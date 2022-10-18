@@ -23,7 +23,7 @@ function initMap(): void {
     }
   );
 
-  // Create the DIV to hold the control.
+  // Create the DIV to hold the control
   const centerControlDiv = document.createElement("div");
 
   const findMeButton = createButton('Find me');
