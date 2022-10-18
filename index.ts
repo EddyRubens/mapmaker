@@ -25,24 +25,31 @@ function initMap(): void {
 
   // Create the DIV to hold the control.
   const centerControlDiv = document.createElement("div");
-  // Create the control.
-  const centerControl = createScanButton(map);
 
-  // Setup the click event listeners: simply set the map to Chicago.
-  centerControl.addEventListener("click", () => {
+  const findMeButton = createButton('Find me');
+  findMeButton.addEventListener("click", () => {
     navigator.geolocation.getCurrentPosition(function (location) {
       lastLocaton = { lat: location.coords.latitude, lng: location.coords.longitude };
-      addMarker(map, lastLocaton);
+      map.setCenter(lastLocaton);
       navigator.vibrate([100, 200, 200, 200, 500]);
     });
   });
-  // Append the control to the DIV.
-  centerControlDiv.appendChild(centerControl);
+  centerControlDiv.appendChild(findMeButton);
 
+  const qrButton = createButton('Scan QR');
+  qrButton.addEventListener("click", () => {
+    navigator.geolocation.getCurrentPosition(function (location) {
+      lastLocaton = { lat: location.coords.latitude, lng: location.coords.longitude };
+      addMarker(map, lastLocaton, `id: 300917 - Agora - Silent Study Seat 208 - lon:${location.coords.latitude} lat:${location.coords.longitude}`);
+      navigator.vibrate([100, 200, 200, 200, 500]);
+    });
+  });
+  centerControlDiv.appendChild(qrButton);
+  
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 }
 
-function createScanButton(map) {
+function createButton(text: string) {
   const controlButton = document.createElement("button");
 
   // Set CSS for the control.
@@ -58,8 +65,8 @@ function createScanButton(map) {
   controlButton.style.margin = "8px 0 22px";
   controlButton.style.padding = "0 5px";
   controlButton.style.textAlign = "center";
-  controlButton.textContent = "Scan QR";
-  controlButton.title = "Scan QR code of the seat";
+  controlButton.textContent = text;
+  controlButton.title = text;
   controlButton.type = "button";
 
   return controlButton;
@@ -68,11 +75,11 @@ function createScanButton(map) {
 function getLocation() {
 }
 
-function addMarker(map: google.maps.Map, position: Position) {
+function addMarker(map: google.maps.Map, position: Position, title: string) {
   new google.maps.Marker({
     position: position,
     map,
-    title: "ResourceID here",
+    title: title,
   });
 }
 
